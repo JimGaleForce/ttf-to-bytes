@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ttf_to_bytes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="50" Width="20">
-    <Grid x:Name="grid" Background="#000000" Height="20" Width="20">
-        <TextBlock x:Name="text" Text="A" FontSize="12" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="Aliased" Foreground="#FFFFFF" Width="20" Height="20"/>
+        Title="MainWindow" Height="90" Width="20">
+    <Grid x:Name="grid" Background="#000000" Height="40" Width="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="text" Text="A" FontSize="12" TextOptions.TextFormattingMode="Display" 
+                   TextOptions.TextRenderingMode="Aliased" Foreground="#FFFFFF" Width="20" Height="20"/>
+        
+        <Canvas Grid.Row="1"  x:Name="canvas" Height="20" Width="20"/>
     </Grid>
 </Window>
