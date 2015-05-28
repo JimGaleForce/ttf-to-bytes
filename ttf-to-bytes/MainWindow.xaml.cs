@@ -41,7 +41,7 @@ namespace ttf_to_bytes
             }
         }
 
-        private byte[,] CreateBytes1(char c)
+        private string CreateBytes1(char c)
         {
             this.text.Text = c.ToString();
 
@@ -67,7 +67,7 @@ namespace ttf_to_bytes
 
             rtb.CopyPixels(pixels, stride, 0);
             //interpret by 84 (21 width??) - measure start x,y and w,h
-            var monoGrid = new byte[height, width];
+            var monoGrid = new bool[height, width];
 
             int x0 = int.MaxValue, x1 = -1, y0 = int.MaxValue, y1 = -1;
             for (var x = 0; x < Math.Min((int) item.Width, width); x++)
@@ -81,16 +81,46 @@ namespace ttf_to_bytes
                         x1 = Math.Max(x1, x);
                         y1 = Math.Max(y1, y);
 
-                        monoGrid[y, x] = 255;
+                        monoGrid[y, x] = true;
                         canvas.Children.Add(new Line {X1 = x, X2 = x+1, Y1 = y, Y2 = y, Stroke = color, StrokeThickness = 1});
                         canvas.Children.Add(new Line { X1 = x, X2 = x, Y1 = y, Y2 = y + 1, Stroke = color, StrokeThickness = 1 });
                     }
                 }
             }
 
+            char[] hex = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+
+            StringBuilder b = new StringBuilder();
+            b.AppendFormat("!{0}{1}{2}{3}", hex[x0], hex[y0], hex[x1 - x0 + 1], hex[y1 - y0 + 1]);
+
+            for (var x = x0; x<=x1; x++)
+            {
+                var bit = 0;
+                var value = 0;
+                for (var y = y0; y<=y1; y++)
+                {
+                    if (monoGrid[y,x])
+                    {
+                        value = value | (1 << bit);
+                    }
+
+                    if (++bit == 4)
+                    {
+                        b.Append(hex[value]);
+                        value = 0;
+                        bit = 0;
+                    }
+                }
+
+                if (bit > 0)
+                {
+                    b.Append(hex[value]);
+                }
+            }
+
             grid.UpdateLayout();
 
-            return monoGrid;
+            return b.ToString();
         }
 
         bool HasValue(byte[] pixels, int stride, int x, int y)
