@@ -32,12 +32,12 @@ namespace ttf_to_bytes
 
         private void CreateBytes()
         {
+            StringBuilder b = new StringBuilder();
+
             for (char c = 'A'; c <= 'Z'; c++)
             {
                 var pixels = CreateBytes1(c);
-
-
-                break; //just testing
+                b.AppendLine(c + "=" + pixels);
             }
         }
 
